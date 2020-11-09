@@ -22,14 +22,14 @@ const Error404 = lazy(() => import("./components/pages/Error404"))
 const MainRouter = ({ userInfo }) => {
 	return (
 		<BrowserRouter>
-			<Switch>
-				<Suspense
-					fallback={
-						<div className="loader">
-							<img src={Loading} alt="loading" />
-						</div>
-					}
-				>
+			<Suspense
+				fallback={
+					<div className="loader">
+						<img src={Loading} alt="loading" />
+					</div>
+				}
+			>
+				<Switch>
 					<Route
 						exact
 						path="/"
@@ -58,8 +58,8 @@ const MainRouter = ({ userInfo }) => {
 					<ProtectedRoutes exact path="/card" component={CardInfo} />
 					<ProtectedRoutes exact path="/personal" component={PersonalInfo} />
 					<Route component={Error404} />
-				</Suspense>
-			</Switch>
+				</Switch>
+			</Suspense>
 		</BrowserRouter>
 	)
 }
