@@ -33,8 +33,6 @@ export class SendMoney extends Component {
 			this.props.sendMoneyWallet(this.state.amount)
 			return this.setState({ redirect: true })
 		}
-
-		console.log(this.state.amount < this.props.userInfo.user.walletBalance)
 	}
 
 	renderError = () => {

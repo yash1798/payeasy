@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Link } from "react-router-dom"
 
 import "../../styles/view-receipts.css"
 import plus from "../../assets/plus.png"
@@ -9,6 +8,8 @@ import minus from "../../assets/negative.png"
 import Header from "../functional/Header"
 import fetchCall from "../../utils/fetchCall"
 
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
+
 export class ViewReceipts extends Component {
 	state = {
 		toShow: "all",
@@ -16,11 +17,13 @@ export class ViewReceipts extends Component {
 	}
 
 	async componentDidMount() {
+		this.props.startLoading()
 		const data = await fetchCall(
 			"transaction/getTransactions",
 			"GET",
 			this.props.userInfo.user.token
 		)
+		this.props.stopLoading()
 
 		if (data.status === "success") {
 			this.setState({ transactionList: data.payload })
@@ -128,4 +131,9 @@ const mapStateToProps = ({ userInfo }) => ({
 	userInfo,
 })
 
-export default connect(mapStateToProps)(ViewReceipts)
+const mapDispatchToProps = (dispatch) => ({
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewReceipts)

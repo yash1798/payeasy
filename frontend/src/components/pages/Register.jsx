@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Link } from "react-router-dom"
+import { connect } from "react-redux"
 
 import "../../styles/register.css"
 import name from "../../assets/name.svg"
@@ -7,6 +8,8 @@ import user from "../../assets/user.svg"
 import padlock from "../../assets/padlock.svg"
 
 import fetchCall from "../../utils/fetchCall"
+
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
 
 export class Register extends Component {
 	state = {
@@ -26,13 +29,20 @@ export class Register extends Component {
 		const user = { name, email, password }
 		const data = await fetchCall("auth/signup", "POST", null, user)
 
+		this.props.startLoading()
+
 		if (data.status === "fail") {
+			this.props.stopLoading()
 			this.setState({ errors: data.payload })
 			return setTimeout(() => this.setState({ errors: "" }), 3000)
 		}
 		if (data.status === "success") {
+			this.props.stopLoading()
 			this.setState({
 				msg: "Please login now to continue with our app.",
+				name: "",
+				email: "",
+				password: "",
 			})
 			return setTimeout(
 				() =>
@@ -109,4 +119,9 @@ export class Register extends Component {
 	}
 }
 
-export default Register
+const mapDispatchToProps = (dispatch) => ({
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
+})
+
+export default connect(null, mapDispatchToProps)(Register)

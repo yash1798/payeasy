@@ -9,6 +9,8 @@ import check from "../../assets/check.svg"
 import fetchCall from "../../utils/fetchCall"
 import { Redirect } from "react-router-dom"
 
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
+
 export class EnterNumber extends Component {
 	state = {
 		number: "",
@@ -24,13 +26,16 @@ export class EnterNumber extends Component {
 	}
 
 	handleCheck = async () => {
+		this.props.startLoading()
 		const data = await fetchCall(`user/getUser/${this.state.number}`, "GET")
 
 		if (data.status === "success") {
+			this.props.stopLoading()
 			this.setState({ name: data.payload.name, toUser: data.payload.id })
 		}
 
 		if (data.status === "fail") {
+			this.props.stopLoading()
 			this.setState({ errors: data.payload, number: "", name: "" })
 		}
 	}
@@ -50,6 +55,7 @@ export class EnterNumber extends Component {
 			)
 
 			if (data.status === "fail") {
+				this.props.stopLoading()
 				return this.setState({ errors: data.payload })
 			}
 
@@ -150,4 +156,9 @@ const mapStateToProps = ({ userInfo, walletInfo }) => ({
 	walletInfo,
 })
 
-export default connect(mapStateToProps)(EnterNumber)
+const mapDispatchToProps = (dispatch) => ({
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnterNumber)

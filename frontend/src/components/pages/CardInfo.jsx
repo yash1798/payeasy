@@ -11,6 +11,8 @@ import credit from "../../assets/credit-card.svg"
 import calendar from "../../assets/calendar.svg"
 import name from "../../assets/cvv-name.svg"
 
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
+
 export class CardInfo extends Component {
 	state = {
 		cardNum: "",
@@ -30,6 +32,9 @@ export class CardInfo extends Component {
 		if (!cardNum || !name || !date) {
 			return this.setState({ errors: true })
 		}
+
+		this.props.startLoading()
+
 		const data = await fetchCall(
 			"user/updateUser",
 			"PUT",
@@ -37,12 +42,15 @@ export class CardInfo extends Component {
 			{ cardNumber: cardNum, cardName: name, date }
 		)
 
+		this.props.startLoading()
+
 		if (data.status === "success") {
 			return this.setState({ redirect: true })
 		}
 	}
 
 	async componentDidMount() {
+		this.props.startLoading()
 		const data = await fetchCall(
 			"user/getUser",
 			"GET",
@@ -50,6 +58,7 @@ export class CardInfo extends Component {
 		)
 
 		if (data.status === "success") {
+			this.props.stopLoading()
 			return this.setState({
 				name: data.payload.bankDetails.cardName,
 				cardNum: data.payload.bankDetails.cardNumber,
@@ -122,4 +131,9 @@ const mapStateToProps = ({ userInfo }) => ({
 	userInfo,
 })
 
-export default connect(mapStateToProps)(CardInfo)
+const mapDispatchToProps = (dispatch) => ({
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardInfo)

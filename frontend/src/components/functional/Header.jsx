@@ -14,6 +14,8 @@ import close from "../../assets/close.svg"
 
 import { logout } from "../../redux/actions/userAction"
 
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
+
 const Header = ({ userInfo, logout }) => {
 	const renderMenu = () => {
 		var element = document.getElementById("header-menu")
@@ -84,6 +86,8 @@ const mapStateToProps = ({ userInfo }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	logout: () => dispatch(logout()),
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

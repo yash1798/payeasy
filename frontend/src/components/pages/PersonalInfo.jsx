@@ -10,6 +10,8 @@ import name from "../../assets/cvv-name.svg"
 import user from "../../assets/user.svg"
 import padlock from "../../assets/padlock.svg"
 
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
+
 export class PersonalInfo extends Component {
 	state = {
 		name: "",
@@ -24,11 +26,15 @@ export class PersonalInfo extends Component {
 	}
 
 	async componentDidMount() {
+		this.props.startLoading()
+
 		const data = await fetchCall(
 			"user/getUser",
 			"GET",
 			this.props.userInfo.user.token
 		)
+
+		this.props.stopLoading()
 
 		if (data.status === "success") {
 			return this.setState({
@@ -41,12 +47,16 @@ export class PersonalInfo extends Component {
 	handleSubmit = async () => {
 		const { email, password, name } = this.state
 
+		this.props.startLoading()
+
 		const data = await fetchCall(
 			"user/updateUser",
 			"PUT",
 			this.props.userInfo.user.token,
 			{ email, name, password }
 		)
+
+		this.props.stopLoading()
 
 		if (data.status === "success") {
 			return this.setState({ redirect: true })
@@ -116,4 +126,9 @@ const mapStateToProps = ({ userInfo }) => ({
 	userInfo,
 })
 
-export default connect(mapStateToProps)(PersonalInfo)
+const mapDispatchToProps = (dispatch) => ({
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo)

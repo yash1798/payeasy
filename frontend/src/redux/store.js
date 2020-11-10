@@ -36,7 +36,7 @@ if (wallet) {
 	}
 }
 
-const initialState = { userInfo, walletInfo }
+const initialState = { userInfo, walletInfo, loading: false }
 
 const middleware = [logger, thunk]
 

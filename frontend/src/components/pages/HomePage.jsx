@@ -9,17 +9,21 @@ import transaction from "../../assets/transaction.svg"
 
 import fetchCall from "../../utils/fetchCall"
 import { getUser } from "../../redux/actions/userAction"
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
 
 import Header from "../functional/Header"
 
 export class HomePage extends Component {
 	async componentDidMount() {
+		this.props.startLoading()
 		const data = await fetchCall(
 			"user/getUser",
 			"GET",
 			this.props.userInfo.user.token,
 			null
 		)
+
+		this.props.stopLoading()
 
 		if (data.status === "success") {
 			return this.props.getUser(data.payload)
@@ -68,6 +72,8 @@ const mapStateToProps = ({ userInfo }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	getUser: (user) => dispatch(getUser(user)),
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

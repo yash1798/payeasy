@@ -85,16 +85,17 @@ exports.addMoney = asyncHandler(async (req, res, next) => {
 	const { userId } = req
 	const { card, cvv, date, name, amount } = req.body
 
-	if (card !== process.env.card) {
+	if (card != process.env.card) {
 		throw new AppError("Invalid credentials.", 400)
 	}
-	if (cvv !== process.env.cvv) {
+	if (cvv != process.env.cvv) {
 		throw new AppError("Invalid credentials.", 400)
 	}
-	if (date !== process.env.date) {
+	if (date != process.env.date) {
 		throw new AppError("Invalid credentials.", 400)
 	}
-	if (name !== process.env.name) {
+
+	if (name != process.env.name) {
 		throw new AppError("Invalid credentials.", 400)
 	}
 

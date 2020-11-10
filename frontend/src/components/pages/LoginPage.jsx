@@ -8,6 +8,7 @@ import padlock from "../../assets/padlock.svg"
 import fetchCall from "../../utils/fetchCall"
 
 import { login } from "../../redux/actions/userAction"
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
 
 export class LoginPage extends Component {
 	state = {
@@ -25,7 +26,10 @@ export class LoginPage extends Component {
 		const { email, password } = this.state
 		const user = { email, password }
 
+		this.props.startLoading()
+
 		const data = await fetchCall("auth/signin", "POST", null, user)
+		this.props.stopLoading()
 
 		if (data.status === "fail") {
 			this.setState({ errors: data.payload })
@@ -92,6 +96,8 @@ export class LoginPage extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
 	login: (userInfo) => dispatch(login(userInfo)),
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
 })
 
 export default connect(null, mapDispatchToProps)(LoginPage)

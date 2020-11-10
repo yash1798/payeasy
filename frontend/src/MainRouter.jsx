@@ -3,8 +3,8 @@ import { connect } from "react-redux"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 
 import ProtectedRoutes from "./utils/protectedRoutes"
-import Loader from "./utils/Loader"
 import Loading from "./assets/Loading.svg"
+import LoaderOpaque from "./components/representational/LoaderOpaque"
 
 const HomePage = lazy(() => import("./components/pages/HomePage"))
 const Introduction = lazy(() => import("./components/functional/Introduction"))
@@ -22,6 +22,7 @@ const Error404 = lazy(() => import("./components/pages/Error404"))
 const MainRouter = ({ userInfo }) => {
 	return (
 		<BrowserRouter>
+			<LoaderOpaque />
 			<Suspense
 				fallback={
 					<div className="loader">
@@ -35,7 +36,6 @@ const MainRouter = ({ userInfo }) => {
 						path="/"
 						component={userInfo.loggedIn ? HomePage : Introduction}
 					/>
-					<Route exact path="/loader" component={Loader} />
 					<Route exact path="/register" component={Register} />
 					<Route exact path="/login" component={LoginPage} />
 					<ProtectedRoutes

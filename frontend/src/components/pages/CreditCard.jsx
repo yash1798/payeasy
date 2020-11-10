@@ -11,6 +11,8 @@ import Header from "../functional/Header"
 import fetchCall from "../../utils/fetchCall"
 import { Redirect } from "react-router-dom"
 
+import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
+
 export class CreditCard extends Component {
 	state = {
 		card: "",
@@ -30,6 +32,7 @@ export class CreditCard extends Component {
 		const amount = this.props.walletInfo.addMoney
 
 		const wallet = { amount, card, name, cvv, date }
+		this.props.startLoading()
 
 		const data = await fetchCall(
 			`user/addMoney`,
@@ -39,20 +42,24 @@ export class CreditCard extends Component {
 		)
 
 		if (data.status === "success") {
+			this.props.stopLoading()
 			return this.setState({ redirect: true })
 		}
 
 		if (data.status === "fail") {
+			this.props.stopLoading()
 			return this.setState({ errors: data.payload })
 		}
 	}
 
 	async componentDidMount() {
+		this.props.startLoading()
 		const data = await fetchCall(
 			"user/getUser",
 			"GET",
 			this.props.userInfo.user.token
 		)
+		this.props.stopLoading()
 
 		if (data.status === "success") {
 			return this.setState({
@@ -141,4 +148,9 @@ const mapStateToProps = ({ walletInfo, userInfo }) => ({
 	userInfo,
 })
 
-export default connect(mapStateToProps)(CreditCard)
+const mapDispatchToProps = (dispatch) => ({
+	startLoading: () => dispatch(startLoading()),
+	stopLoading: () => dispatch(stopLoading()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreditCard)
