@@ -28,9 +28,17 @@ export class EnterNumber extends Component {
 	handleCheck = async () => {
 		this.props.startLoading()
 		const data = await fetchCall(`user/getUser/${this.state.number}`, "GET")
+		this.props.stopLoading()
+
+		console.log(data)
 
 		if (data.status === "success") {
-			this.props.stopLoading()
+			console.log(this.props.userInfo.user.id)
+			if (data.payload.id === this.props.userInfo.user.id) {
+				return this.setState({
+					errors: "You cannot send money to your number.",
+				})
+			}
 			this.setState({ name: data.payload.name, toUser: data.payload.id })
 		}
 
@@ -57,8 +65,6 @@ export class EnterNumber extends Component {
 			)
 
 			this.props.stopLoading()
-
-			console.log(data)
 
 			if (data.status === "fail") {
 				return this.setState({ errors: data.payload })
@@ -116,7 +122,7 @@ export class EnterNumber extends Component {
 			}, 4000)
 			return (
 				<div className="error">
-					<h3>Could not find a user with this number. </h3>
+					<h3>{this.state.errors}</h3>
 				</div>
 			)
 		}

@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import spinner from "../../assets/Spinner.svg"
 
 const LoaderOpaque = ({ loading }) => {
-	console.log(loading)
 	if (!loading.loading) {
 		return null
 	}

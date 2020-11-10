@@ -9,6 +9,7 @@ import { addMoneyWallet } from "../../redux/actions/walletAction"
 export class AddMoney extends Component {
 	state = {
 		amount: "",
+		errors: "",
 	}
 
 	handleChange = (e) => {
@@ -16,8 +17,24 @@ export class AddMoney extends Component {
 	}
 
 	handleSubmit = () => {
+		if (this.state.amount.includes(".")) {
+			return this.setState({ errors: "Enter a correct (integer) amount." })
+		}
 		this.props.addMoneyWallet(this.state.amount)
 		this.props.history.push("/add-money/credit-card")
+	}
+
+	renderError = () => {
+		if (this.state.errors) {
+			setTimeout(() => {
+				this.setState({ errors: "" })
+			}, 3000)
+			return (
+				<div className="error">
+					<h3>{this.state.errors}</h3>
+				</div>
+			)
+		}
 	}
 
 	render() {
@@ -27,6 +44,7 @@ export class AddMoney extends Component {
 				<section className="page add-money ">
 					<h1>Add money from your bank account.</h1>
 					<div className="card">
+						{this.renderError()}
 						<div className="enter-amount">
 							<span>$</span>
 							<input

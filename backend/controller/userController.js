@@ -63,14 +63,30 @@ exports.updateUser = asyncHandler(async (req, res) => {
 		user.email = email
 	}
 
-	if (tel_number) {
-		user.tel_number = tel_number
-	}
-
 	if (password) {
 		const hashed_password = await bcrypt.hash(password, 10)
 
 		user.hashed_password = hashed_password
+	}
+
+	if (tel_number) {
+		if (tel_number.length !== 10) {
+			throw new AppError("Enter a valid (10 digits) number.", 400)
+		}
+
+		const tel_user = await User.findOne({ tel_number })
+
+		console.log("hi")
+
+		if (!tel_user) {
+			console.log("hiii")
+			user.tel_number = tel_number
+		}
+
+		if (tel_user && tel_user._id != userId) {
+			console.log("hii")
+			throw new AppError("Number already taken.", 400)
+		}
 	}
 
 	await user.save(() => {

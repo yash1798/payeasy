@@ -9,15 +9,17 @@ import "../../styles/personal-info.css"
 import name from "../../assets/cvv-name.svg"
 import user from "../../assets/user.svg"
 import padlock from "../../assets/padlock.svg"
+import phone from "../../assets/phone.svg"
 
 import { startLoading, stopLoading } from "../../redux/actions/loadingAction"
 
 export class PersonalInfo extends Component {
 	state = {
 		name: "",
+		tel_number: "",
 		email: "",
 		password: "",
-		errors: false,
+		errors: "",
 		redirect: false,
 	}
 
@@ -40,12 +42,13 @@ export class PersonalInfo extends Component {
 			return this.setState({
 				name: data.payload.name,
 				email: data.payload.email,
+				tel_number: data.payload.tel_number,
 			})
 		}
 	}
 
 	handleSubmit = async () => {
-		const { email, password, name } = this.state
+		const { email, password, name, tel_number } = this.state
 
 		this.props.startLoading()
 
@@ -53,13 +56,17 @@ export class PersonalInfo extends Component {
 			"user/updateUser",
 			"PUT",
 			this.props.userInfo.user.token,
-			{ email, name, password }
+			{ email, name, password, tel_number }
 		)
 
 		this.props.stopLoading()
 
 		if (data.status === "success") {
 			return this.setState({ redirect: true })
+		}
+
+		if (data.status === "fail") {
+			return this.setState({ errors: data.payload })
 		}
 	}
 
@@ -68,7 +75,7 @@ export class PersonalInfo extends Component {
 			setTimeout(() => this.setState({ errors: "" }), 3000)
 			return (
 				<div className="error">
-					<h3>Enter all the fields.</h3>
+					<h3>{this.state.errors}</h3>
 				</div>
 			)
 		}
@@ -110,6 +117,15 @@ export class PersonalInfo extends Component {
 								onChange={(e) => this.handleChange("password", e)}
 								type="password"
 								placeholder="Password"
+							/>
+						</div>
+						<div className="input">
+							<img src={phone} alt="phone" />
+							<input
+								value={this.state.tel_number}
+								onChange={(e) => this.handleChange("tel_number", e)}
+								type="number"
+								placeholder="Phone Number"
 							/>
 						</div>
 					</div>

@@ -56,9 +56,9 @@ export class CardInfo extends Component {
 			"GET",
 			this.props.userInfo.user.token
 		)
+		this.props.stopLoading()
 
-		if (data.status === "success") {
-			this.props.stopLoading()
+		if (data.status === "success" && data.payload.bankDetails) {
 			return this.setState({
 				name: data.payload.bankDetails.cardName,
 				cardNum: data.payload.bankDetails.cardNumber,

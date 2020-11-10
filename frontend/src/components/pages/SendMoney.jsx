@@ -11,7 +11,7 @@ export class SendMoney extends Component {
 	state = {
 		amount: "",
 		redirect: false,
-		renderError: false,
+		renderError: "",
 	}
 
 	handleChange = (e) => {
@@ -19,11 +19,22 @@ export class SendMoney extends Component {
 	}
 
 	handleSubmit = () => {
+		if (this.state.amount.includes(".")) {
+			return this.setState({
+				renderError: "Enter a correct (integer) amount.",
+			})
+		}
+		if (this.state.amount === "0") {
+			this.setState({ renderError: "Cannot Send $0." })
+			return setTimeout(() => {
+				this.setState({ renderError: false })
+			}, 3000)
+		}
 		if (
 			this.state.amount > this.props.userInfo.user.walletBalance ||
 			this.state.amount < 0
 		) {
-			this.setState({ renderError: true })
+			this.setState({ renderError: "Not Enough Balance." })
 			return setTimeout(() => {
 				this.setState({ renderError: false })
 			}, 3000)
@@ -39,7 +50,7 @@ export class SendMoney extends Component {
 		if (this.state.renderError) {
 			return (
 				<div className="error">
-					<h3>Not Enough Balance.</h3>
+					<h3>{this.state.renderError}</h3>
 				</div>
 			)
 		}
@@ -54,8 +65,9 @@ export class SendMoney extends Component {
 				<Header />
 				<section className="send-money page">
 					<h1>Enter the amount you want to send.</h1>
-					{this.renderError()}
+
 					<div className="card">
+						{this.renderError()}
 						<div className="enter-amount">
 							<span>$</span>
 							<input

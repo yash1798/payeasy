@@ -61,7 +61,7 @@ export class CreditCard extends Component {
 		)
 		this.props.stopLoading()
 
-		if (data.status === "success") {
+		if (data.status === "success" && data.payload.bankDetails) {
 			return this.setState({
 				name: data.payload.bankDetails.cardName,
 				card: data.payload.bankDetails.cardNumber,

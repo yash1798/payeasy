@@ -26,6 +26,7 @@
 	height: auto;
 	align-self: flex-start;
 	margin-top: 1rem;
+	cursor: pointer;
 }
 
 .home-header .header-menu {
@@ -83,15 +84,18 @@
 	width: 2rem;
 	filter: invert(16%) sepia(95%) saturate(6673%) hue-rotate(4deg)
 		brightness(103%) contrast(122%);
+	cursor: auto;
 }
 .home-header .header-menu .logout .login-btn {
 	color: red;
 	font-weight: 500;
 	margin: 0 1rem;
+	cursor: pointer;
 }
 
 .home-header .header-menu img {
 	width: 3rem;
 	filter: invert(54%) sepia(69%) saturate(292%) hue-rotate(198deg)
 		brightness(88%) contrast(96%);
+	cursor: pointer;
 }
