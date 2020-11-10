@@ -29,6 +29,7 @@ export class LoginPage extends Component {
 		this.props.startLoading()
 
 		const data = await fetchCall("auth/signin", "POST", null, user)
+
 		this.props.stopLoading()
 
 		if (data.status === "fail") {

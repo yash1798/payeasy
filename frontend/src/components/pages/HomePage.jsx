@@ -16,6 +16,7 @@ import Header from "../functional/Header"
 export class HomePage extends Component {
 	async componentDidMount() {
 		this.props.startLoading()
+
 		const data = await fetchCall(
 			"user/getUser",
 			"GET",
