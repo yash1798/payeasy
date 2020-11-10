@@ -47,6 +47,8 @@ export class EnterNumber extends Component {
 				amount: this.props.walletInfo.sendMoney,
 			}
 
+			this.props.startLoading()
+
 			const data = await fetchCall(
 				`transaction/createTransaction`,
 				"POST",
@@ -54,8 +56,11 @@ export class EnterNumber extends Component {
 				body
 			)
 
+			this.props.stopLoading()
+
+			console.log(data)
+
 			if (data.status === "fail") {
-				this.props.stopLoading()
 				return this.setState({ errors: data.payload })
 			}
 
@@ -84,12 +89,13 @@ export class EnterNumber extends Component {
 				</div>
 			)
 		}
-
-		return (
-			<div className="login-btn" onClick={this.handleSubmit}>
-				SEND
-			</div>
-		)
+		if (this.state.name) {
+			return (
+				<div className="login-btn" onClick={this.handleSubmit}>
+					SEND
+				</div>
+			)
+		}
 	}
 
 	renderSuccess = () => {

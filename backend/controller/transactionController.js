@@ -5,6 +5,7 @@ const AppError = require("../utils/errorHandler")
 const Transaction = require("../models/transactionModel")
 
 exports.createTransaction = expressAsyncHandler(async (req, res) => {
+	console.log(req.body)
 	const { toUser, amount } = req.body
 
 	const fromUser = req.userId
@@ -26,6 +27,8 @@ exports.createTransaction = expressAsyncHandler(async (req, res) => {
 		}
 	).then((response) => response.json())
 
+	console.log(data)
+
 	if (data.status === "fail") {
 		throw new AppError(`Something went wrong ${data.payload}`, 500)
 	}
@@ -40,6 +43,8 @@ exports.createTransaction = expressAsyncHandler(async (req, res) => {
 			},
 			body: JSON.stringify({ type: "CREDIT", amount }),
 		}).then((response) => response.json())
+
+		console.log(data)
 
 		if (data.status === "success") {
 			const transaction = await Transaction.create({
