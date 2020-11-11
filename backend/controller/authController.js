@@ -31,7 +31,9 @@ exports.signin = asyncHandler(async (req, res) => {
 		const { hashed_password } = user
 		const decoded = await bcrypt.compare(password, hashed_password)
 		if (decoded) {
-			const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+			const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+				expiresIn: "1d",
+			})
 			return res.json({
 				status: "success",
 				payload: {
