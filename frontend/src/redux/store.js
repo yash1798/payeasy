@@ -1,12 +1,8 @@
 import { createStore, applyMiddleware } from "redux"
-import { composeWithDevTools } from "redux-devtools-extension"
-import { createLogger } from "redux-logger"
 
 import reducer from "./mainReducer"
 
 const thunk = require("redux-thunk").default
-
-const logger = createLogger()
 
 if (localStorage.getItem("user")) {
 	var userInfo = {
@@ -38,12 +34,8 @@ if (wallet) {
 
 const initialState = { userInfo, walletInfo, loading: false }
 
-const middleware = [logger, thunk]
+const middleware = [thunk]
 
-const store = createStore(
-	reducer,
-	initialState,
-	composeWithDevTools(applyMiddleware(...middleware))
-)
+const store = createStore(reducer, initialState, applyMiddleware(...middleware))
 
 export default store
